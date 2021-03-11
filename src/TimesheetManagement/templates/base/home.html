@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <h4><a href="{% url 'products:product_list' %}">View Products</a></h4>
+    
+    {% if user.is_authenticated %}
+        <h4><a href="{% url 'products:category_list' %}">View Categories</a></h4>
+    {% endif %}
+
+    {% if user.is_superuser %}
+        <h4><a href="{% url 'users:user_list' %}">Manage User Accounts</a></h4>
+        <h4><a href="{% url 'employees:employee_list' %}">Manage Employees</a></h4>
+    {% endif %}
+{% endblock content %}

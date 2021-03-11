@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if title %}
+            <title>TestProject - {{ title }}</title>
+        {% else %}
+            <title>TestProject</title>
+        {% endif %}
+
+        <!-- Latest compiled and minified JavaScript & CSS 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+    </head>
+
+    <body>
+        <header>
+            <nav>
+                {% if user.is_authenticated %}
+                    <h4>
+                        <a href="{% url 'users:logout' %}">Logout</a>
+                        <a href="{% url 'users:user_detail' user.id %}">Manage Account</a>
+                    </h4>
+                {% else %}
+                    <h4><a href="{% url 'users:login' %}">Login</a> or <a href="{% url 'users:register' %}">Register</a></h4>
+                {% endif %}
+            </nav>
+            {% if user.is_authenticated %}
+                <div>
+                    {% if cart|length > 0 %}
+                        {% with total_items=cart|length %}
+                            My cart:
+                            <a href="{% url 'cart:cart_detail' %}">
+                                {{ total_items }} item{{ total_items|pluralize }}, ${{ cart.get_total_price }}
+                            </a>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </header>
+        <div>
+            {% if title %}
+                <h1>{{ title }}</h1>
+            {% endif %}
+
+            {% block content %}{% endblock content %}
+        </div>
+    </body>
+</html>
