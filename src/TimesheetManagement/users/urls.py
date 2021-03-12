@@ -5,7 +5,9 @@ from django.contrib.auth import views as auth_views
 app_name = "users"
 
 urlpatterns = [
-    path("", views.UserList.as_view(), name="user_list"),
+    path("", views.DoctorList.as_view(), name="doctor_list"),
+    path("admin/", views.AdminList.as_view(), name="admin_list"),
+    path("new/", views.UserCreate.as_view(), name="user_create"),
     path("<int:pk>/", views.UserDetail.as_view(), name="user_detail"),
     path("<int:pk>/update/", views.UserUpdate.as_view(), name="user_update"),
     path("<int:pk>/delete/", views.UserDelete.as_view(), name="user_delete"),

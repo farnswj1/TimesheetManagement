@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
 
 US_STATES = (
     ('AL', 'Alabama'),
@@ -61,9 +62,10 @@ class Profile(models.Model):
     user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
     ssn = models.CharField(
         primary_key=True,
+        max_length=11,
         validators=[
             RegexValidator(
-                regex="^\d{3}-\d{3}-\d{4}$",
+                regex="^\d{3}-\d{2}-\d{4}$",
                 message="Please enter a valid phone number. (XXX-XXX-XXXX)"
             )
         ]
@@ -119,14 +121,14 @@ class Profile(models.Model):
         null=False, 
         validators=[
             RegexValidator(
-                regex="^\d{5}-(\d{4})?$",
+                regex="^\d{5}(-\d{4})?$",
                 message="Please enter a valid ZIP code."
             )
         ]
     )
 
     def __str__(self):
-        return f"{self.user.username}"
+        return f"{self.user.first_name} {self.user.last_name} ({self.user.username})"
     
     class Meta:
         ordering = ['user']

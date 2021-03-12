@@ -2,8 +2,14 @@
 
 {% block content %}
     <form enctype="multipart/form-data" method="POST">
-        {% csrf_token %} 
-        {{ form.as_p }}
+        {% csrf_token %}
+        
+        {% if user_form and profile_form %}
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+        {% else %}
+            {{ form.as_p }}
+        {% endif %}
         <button type="submit">Submit</button>
     </form>
     {% block previousbutton %}{% endblock previousbutton %}

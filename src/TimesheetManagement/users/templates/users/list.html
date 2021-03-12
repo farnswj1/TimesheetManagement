@@ -1,0 +1,50 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    {% if users %}
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Active</th>
+                <th>Description</th>
+                <th>Phone Number</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>ZIP Code</th>
+                <th colspan="3">Options</th>
+            </tr>
+            {% for user_ in users %}    
+                <tr>
+                    <td>{{ user_.username }}</td>
+                    <td>{{ user_.first_name }}</td>
+                    <td>{{ user_.last_name }}</td>
+                    <td>{{ user_.email }}</td>
+                    <td>{{ user_.is_active|yesno:"Yes,No" }}</td>
+                    <td>{{ user_.profile.description }}</td>
+                    <td>{{ user_.profile.phone_number }}</td>
+                    <td>{{ user_.profile.date_of_birth }}</td>
+                    <td>{{ user_.profile.address }}</td>
+                    <td>{{ user_.profile.city }}</td>
+                    <td>{{ user_.profile.state }}</td>
+                    <td>{{ user_.profile.zip_code }}</td>
+                    
+                    <td><a href="{% url 'users:user_detail' user_.id %}">View</a></td>
+                    <td><a href="{% url 'users:user_update' user_.id %}">Update</a></td>
+
+                    {% if user != user_ and user_.is_active %}
+                        <td><a href="{% url 'users:user_delete' user_.id %}">Delete</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h1>No users are listed at this time.</h1>
+    {% endif %}
+    <h4><a href="{% url 'users:user_create' %}">Add User</a></h4>
+    <h4><a href="{% url 'home' %}">Back</a></h4>
+{% endblock content%}
