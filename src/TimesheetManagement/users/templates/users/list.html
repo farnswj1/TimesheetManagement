@@ -33,11 +33,11 @@
                     <td>{{ user_.profile.state }}</td>
                     <td>{{ user_.profile.zip_code }}</td>
                     
-                    <td><a href="{% url 'users:user_detail' user_.id %}">View</a></td>
-                    <td><a href="{% url 'users:user_update' user_.id %}">Update</a></td>
+                    <td><a href="{% url 'users:detail' user_.id %}">View</a></td>
+                    <td><a href="{% url 'users:update' user_.id %}">Update</a></td>
 
                     {% if user != user_ and user_.is_active %}
-                        <td><a href="{% url 'users:user_delete' user_.id %}">Delete</a></td>
+                        <td><a href="{% url 'users:delete' user_.id %}">Delete</a></td>
                     {% endif %}
                 </tr>
             {% endfor %}
@@ -45,6 +45,6 @@
     {% else %}
         <h1>No users are listed at this time.</h1>
     {% endif %}
-    <h4><a href="{% url 'users:user_create' %}">Add User</a></h4>
+    <h4><a href="{% url 'users:create' %}">Add User</a></h4>
     <h4><a href="{% url 'home' %}">Back</a></h4>
 {% endblock content%}

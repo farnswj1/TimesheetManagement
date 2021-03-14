@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.utils.timezone import now
 from django.contrib.auth.models import User
+from django.urls import reverse
 from locations.models import Location
 from datetime import time
 
@@ -59,4 +60,7 @@ class WorkDay(models.Model):
     )
 
     def hours_worked(self):
-        return self.time_out - self.time_in 
+        return self.time_out - self.time_in
+    
+    def get_absolute_url(self):
+        return reverse("workdays:list")

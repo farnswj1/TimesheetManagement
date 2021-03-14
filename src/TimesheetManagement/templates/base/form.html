@@ -3,7 +3,6 @@
 {% block content %}
     <form enctype="multipart/form-data" method="POST">
         {% csrf_token %}
-        
         {% if user_form and profile_form %}
             {{ user_form.as_p }}
             {{ profile_form.as_p }}

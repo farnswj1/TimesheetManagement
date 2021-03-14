@@ -24,6 +24,8 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    date_of_birth = forms.DateField(widget=forms.SelectDateWidget())
+
     class Meta:
         model = Profile
         exclude = ["user"]

@@ -28,7 +28,7 @@ class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             profile_.user = user_
             user_.save()
             profile_form.save()
-            return redirect("users:user_detail", pk=user_form.instance.pk)
+            return redirect("users:detail", pk=user_form.instance.pk)
         else:
             return self.get(request, *args, **kwargs)
 
@@ -71,9 +71,15 @@ class UserUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
 
     def get(self, request, *args, **kwargs):
-        user_form = UserUpdateForm(instance=self.get_object())
-        profile_form = ProfileForm(instance=self.get_object().profile)
-        context = {"user_form": user_form, "profile_form": profile_form, "title": "Create User"}
+        user_ = self.get_object()
+        user_form = UserUpdateForm(instance=user_)
+        profile_form = ProfileForm(instance=user_.profile)
+        context = {
+            "user__is_superuser": user_.is_superuser, 
+            "user_form": user_form, 
+            "profile_form": profile_form, 
+            "title": "Create User"
+        }
         return render(request, "users/update.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -82,7 +88,7 @@ class UserUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            return redirect("users:user_detail", pk=user_form.instance.pk)
+            return redirect("users:detail", pk=user_form.instance.pk)
         else:
             self.get(request, *args, **kwargs)
 
@@ -104,4 +110,4 @@ class UserDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         user_ = self.get_object()
         user_.is_active = False
         user_.save()
-        return redirect("users:user_detail", pk=user_.pk)
+        return redirect("users:detail", pk=user_.pk)

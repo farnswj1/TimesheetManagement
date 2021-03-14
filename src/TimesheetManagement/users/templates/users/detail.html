@@ -15,15 +15,15 @@
     <p><b>State:</b> {{ user_.profile.state }}</p>
     <p><b>ZIP Code:</b> {{ user_.profile.zip_code }}</p>
     
-    <p><a href="{% url 'users:user_update' user_.id %}">Update</a></p>
+    <p><a href="{% url 'users:update' user_.id %}">Update</a></p>
 
     {% if user != user_ and user_.is_active %}
-    <p><a href="{% url 'users:user_delete' user_.id %}">Delete</a></p>
+    <p><a href="{% url 'users:delete' user_.id %}">Delete</a></p>
     {% endif %}
 
-    {% if user.is_superuser %}
-        <h4><a href="{% url 'users:user_list' %}">Back</a></h4>
+    {% if user_.is_superuser %}
+        <h4><a href="{% url 'users:admin_list' %}">Back</a></h4>
     {% else %}
-        <h4><a href="{% url 'home' %}">Back</a></h4>
+        <h4><a href="{% url 'users:doctor_list' %}">Back</a></h4>
     {% endif %}
 {% endblock content%}

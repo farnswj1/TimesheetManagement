@@ -20,4 +20,6 @@ urlpatterns = [
     path("", users_views.DoctorList.as_view(), name="home"),
     path('admin/', admin.site.urls),
     path('users/', include("users.urls")),
+    path('locations/', include("locations.urls")),
+    path('workdays/', include("workdays.urls")),
 ]

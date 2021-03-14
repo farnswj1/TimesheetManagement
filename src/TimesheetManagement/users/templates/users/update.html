@@ -1,5 +1,9 @@
 {% extends "base/form.html" %}
 
 {% block previousbutton %}
-    <a href="{% url 'users:user_list' %}">Back</a>
+    {% if user__is_superuser %}
+        <h4><a href="{% url 'users:admin_list' %}">Back</a></h4>
+    {% else %}
+        <h4><a href="{% url 'users:doctor_list' %}">Back</a></h4>
+    {% endif %}
 {% endblock previousbutton %}
