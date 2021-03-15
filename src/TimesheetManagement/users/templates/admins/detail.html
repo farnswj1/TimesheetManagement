@@ -1,0 +1,12 @@
+{% extends "users/detail.html" %}
+
+{% block options %}
+    {% if user.is_superuser and user != user_ and user_.is_active %}
+        <p><a href="{% url 'users:admin_update' user_.id %}">Update</a></p>
+        <p><a href="{% url 'users:admin_delete' user_.id %}">Delete</a></p>
+    {% endif %}
+{% endblock options %}
+
+{% block back_button %}
+    <h4><a href="{% url 'users:admin_list' %}">Back</a></h4>
+{% endblock back_button %}

@@ -14,10 +14,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users import views as users_views
+from . import views
 
 urlpatterns = [
-    path("", users_views.DoctorList.as_view(), name="home"),
+    path("", views.home, name="home"),
     path('admin/', admin.site.urls),
     path('users/', include("users.urls")),
+    path('locations/', include("locations.urls")),
+    path('workdays/', include("workdays.urls")),
 ]

@@ -1,16 +1,33 @@
 {% extends "base/base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
     <form enctype="multipart/form-data" method="POST">
         {% csrf_token %}
-        
         {% if user_form and profile_form %}
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
+            {% for field in user_form %}
+            <div class="form-group">
+                {{ field.label_tag}}
+                {% render_field field class="form-control" %}
+            </div>
+            {% endfor %}
+
+            {% for field in profile_form %}
+            <div class="form-group">
+                {{ field.label_tag}}
+                {% render_field field class="form-control" %}
+            </div>
+            {% endfor %}
+
         {% else %}
-            {{ form.as_p }}
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag}}
+                {% render_field field class="form-control" %}
+            </div>
+            {% endfor %}
         {% endif %}
-        <button type="submit">Submit</button>
+        <button class="btn btn-primary mt-3" type="submit">Submit</button>
     </form>
-    {% block previousbutton %}{% endblock previousbutton %}
+    {% block back_button %}{% endblock back_button %}
 {% endblock content %}

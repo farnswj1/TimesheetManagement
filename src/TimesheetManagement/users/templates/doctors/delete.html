@@ -1,0 +1,5 @@
+{% extends "base/confirm_delete.html" %}
+
+{% block back_button %}
+    <a href="{% url 'users:doctor_detail' user_.id %}">Cancel</a>
+{% endblock back_button %}

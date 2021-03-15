@@ -23,12 +23,15 @@ class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         profile_form = ProfileForm(request.POST)
 
         if user_form.is_valid() and profile_form.is_valid():
-            user_ = user_form.save(commit=False)
+            user_ = user_form.save()
             profile_ = profile_form.save(commit=False)
             profile_.user = user_
-            user_.save()
             profile_form.save()
-            return redirect("users:user_detail", pk=user_form.instance.pk)
+
+            if user_.is_superuser:
+                return redirect("users:admin_detail", pk=user_.pk)
+            else:
+                return redirect("users:doctor_detail", pk=user_.pk)
         else:
             return self.get(request, *args, **kwargs)
 
@@ -38,7 +41,7 @@ class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
 class DoctorList(LoginRequiredMixin, ListView):
     model = User
-    template_name = "users/list.html"
+    template_name = "doctors/list.html"
     context_object_name = "users"
     ordering = ["-is_active", "username"]
     queryset = User.objects.filter(is_superuser=False)
@@ -48,54 +51,59 @@ class DoctorList(LoginRequiredMixin, ListView):
         return self.request.user.is_superuser
 
 
-class AdminList(LoginRequiredMixin, ListView):
-    model = User
-    template_name = "users/list.html"
-    context_object_name = "users"
-    ordering = ["-is_active", "username"]
-    queryset = User.objects.filter(is_superuser=True)
-    extra_context = {"title": "List of Administrators"}
-
-
-class UserDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class DoctorDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = User
     context_object_name = "user_"
-    template_name = "users/detail.html"
-    extra_context = {"title": "User Information"}
+    template_name = "doctors/detail.html"
+    extra_context = {"title": "Doctor Information"}
 
     def test_func(self):
         return self.request.user.is_superuser or self.request.user == self.get_object()
 
 
-class UserUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class DoctorUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = User
+    template_name = "doctors/update.html"
 
     def get(self, request, *args, **kwargs):
-        user_form = UserUpdateForm(instance=self.get_object())
-        profile_form = ProfileForm(instance=self.get_object().profile)
-        context = {"user_form": user_form, "profile_form": profile_form, "title": "Create User"}
-        return render(request, "users/update.html", context)
+        user_ = self.get_object()
+        user_form = UserUpdateForm(instance=user_)
+        profile_form = ProfileForm(instance=user_.profile)
+        context = {
+            "user__is_superuser": user_.is_superuser, 
+            "user_form": user_form, 
+            "profile_form": profile_form, 
+            "title": "Update Administrator" if user_.is_superuser else "Update Doctor"
+        }
+        return self.get_url(request, context)
 
     def post(self, request, *args, **kwargs):
         user_form = UserUpdateForm(request.POST, instance=self.get_object())
         profile_form = ProfileForm(request.POST, instance=self.get_object().profile)
         if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
+            user_ = user_form.save()
             profile_form.save()
-            return redirect("users:user_detail", pk=user_form.instance.pk)
+
+            if user_.is_superuser:
+                return redirect("users:admin_detail", pk=user_.pk)
+            else:
+                return redirect("users:doctor_detail", pk=user_.pk)
         else:
             self.get(request, *args, **kwargs)
 
     def test_func(self):
         return self.request.user.is_superuser or self.request.user == self.get_object()
+    
+    def get_url(self, request, context):
+        return render(request, self.template_name, context)
 
 
-class UserDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class DoctorDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = User
-    template_name = "users/delete.html"
+    template_name = "doctors/delete.html"
     context_object_name = "user_"
-    success_url = reverse_lazy("users:user_list")
-    extra_context = {"title": "Delete User"}
+    success_url = reverse_lazy("users:doctor_list")
+    extra_context = {"title": "Delete Doctor"}
 
     def test_func(self):
         return self.request.user.is_superuser and self.request.user != self.get_object()
@@ -104,4 +112,28 @@ class UserDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         user_ = self.get_object()
         user_.is_active = False
         user_.save()
-        return redirect("users:user_detail", pk=user_.pk)
+        if user_.is_superuser:
+            return redirect("users:admin_list")
+        else:
+            return redirect("users:doctor_list")
+
+
+class AdminList(DoctorList):
+    template_name = "admins/list.html"
+    queryset = User.objects.filter(is_superuser=True)
+    extra_context = {"title": "List of Administrators"}
+
+
+class AdminDetail(DoctorDetail):
+    template_name = "admins/detail.html"
+    extra_context = {"title": "Administrator Information"}
+
+
+class AdminUpdate(DoctorUpdate):
+    template_name = "admins/update.html"
+
+
+class AdminDelete(DoctorDelete):
+    template_name = "admins/delete.html"
+    success_url = reverse_lazy("users:admin_list")
+    extra_context = {"title": "Delete Administrator"}

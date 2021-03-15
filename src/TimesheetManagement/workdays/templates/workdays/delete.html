@@ -1,0 +1,5 @@
+{% extends "base/confirm_delete.html" %}
+
+{% block back_button %}
+    <a href="{% url 'workdays:detail' workday.id %}">Back</a>
+{% endblock back_button %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from django.urls import reverse
 
 SECTORS = (("E", "East"), ("W", "West"))
 
@@ -30,3 +31,6 @@ class Location(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.sector})"
+
+    def get_absolute_url(self):
+        return reverse("locations:list")
