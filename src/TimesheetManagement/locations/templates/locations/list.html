@@ -19,6 +19,10 @@
               </div> 
         </div>
         <div class="col-sm-9">
+            <form action="{% url 'locations:list' %}" method="get">
+                <input name="search" type="text" placeholder="Search locations">
+                <button type="submit">Search</button>
+            </form>
             {% if locations %}
             <table class="table mt-4">
                 <thead>

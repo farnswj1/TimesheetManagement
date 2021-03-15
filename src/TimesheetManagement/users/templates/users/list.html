@@ -19,6 +19,11 @@
               </div> 
         </div>
         <div class="col-sm-9">
+        <form {% block action_url %}{% endblock action_url %} method="get">
+            <input name="first_name" type="text" placeholder="Search first name">
+            <input name="last_name" type="text" placeholder="Search last name">
+            <button type="submit">Search</button>
+        </form>    
         {% if users %}
         <table class="table mt-4">
             <thead>
@@ -46,7 +51,7 @@
               {% endfor %}
         </table>
     {% else %}
-        <h1>No users are listed at this time.</h1>
+        <h1>No users met the search criteria.</h1>
     {% endif %}
 
     {% if user.is_superuser %}
