@@ -8,26 +8,35 @@
         {% else %}
             <title>TestProject</title>
         {% endif %}
-
-        <!-- Latest compiled and minified JavaScript & CSS 
+        
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     </head>
 
     <body>
         <header>
             <nav>
-                {% if user.is_authenticated %}
+                <div class="navbar">
+                    {% if user.is_authenticated %}
                     <h4>
                         <a href="{% url 'users:logout' %}">Logout</a>
-                        <a href="{% url 'users:detail' user.id %}">Manage Account</a>
+                        <a href="{% url 'users:admin_list' %}">Administration</a>
+                        <a href="{% url 'workdays:list' %}">Time Card Management</a>
+                        <a href="">Reports</a>
                     </h4>
-                {% else %}
-                    <h4><a href="{% url 'users:login' %}">Login</a></h4>
-                {% endif %}
+                    {% endif %}
+                </div>
+                    
+                <div class="sidenav">
+                    {% if user.is_authenticated %}
+                        {% block sidebar %}{% endblock sidebar %}
+                    {% endif %}
+                </div>
             </nav>
         </header>
-        <div>
+        <div class="main">
             {% if title %}
                 <h1>{{ title }}</h1>
             {% endif %}
