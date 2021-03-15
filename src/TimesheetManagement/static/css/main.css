@@ -1,0 +1,29 @@
+.navbar {
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #ddd;
+    overflow-x: hidden;
+    padding-bottom: 20px;
+}
+
+.sidenav {
+    height: 100%;
+    width: 120px;
+    position: fixed;
+    z-index: 1;
+    top: 50px;
+    left: 0;
+    background-color: #aaa;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+
+.main {
+    margin-top: 60px;
+    margin-left: 120px;
+    padding: 0px 10px;
+}
