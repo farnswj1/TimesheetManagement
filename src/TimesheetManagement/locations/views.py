@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, UserPassesTestMixin
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 from .models import Location
 
@@ -13,7 +13,13 @@ class LocationList(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def test_func(self):
         return self.request.user.is_superuser
-
+        
+    def get_queryset(self):
+        query = self.request.GET.get("search")
+        if query:
+            return Location.objects.filter(name__icontains=query.strip())
+        else:
+            return super().get_queryset()
 
 class LocationCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Location

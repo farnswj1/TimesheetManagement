@@ -1,4 +1,9 @@
 {% extends "users/list.html" %}
+{% include "base/admin_sidebar.html" %}
+
+{% block search_url %}
+    action="{% url 'users:admin_list' %}"
+{% endblock search_url %}
 
 {% block options %}
     {% if user.is_superuser or user == user_ %}

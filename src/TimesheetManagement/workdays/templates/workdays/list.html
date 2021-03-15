@@ -1,6 +1,14 @@
 {% extends "base/base.html" %}
 
 {% block content %}
+    {% if user.is_superuser %}
+    <form action="{% url 'workdays:list' %}" method="get">
+        <input name="first_name" type="text" placeholder="Search first name">
+        <input name="last_name" type="text" placeholder="Search last name">
+        <button type="submit">Search</button>
+    </form>
+    {% endif %}
+
     {% if workdays %}
         <table>
             <tr>
@@ -26,18 +34,23 @@
                     <td>${{ workday.amco_payroll }}</td>
                     
                     <td><a href="{% url 'workdays:detail' workday.id %}">View</a></td>
-                    <td><a href="{% url 'workdays:update' workday.id %}">Update</a></td>
-                    <td><a href="{% url 'workdays:delete' workday.id %}">Delete</a></td>
+                    
+                    {% if user.is_superuser %}
+                        <td><a href="{% url 'workdays:update' workday.id %}">Update</a></td>
+                        <td><a href="{% url 'workdays:delete' workday.id %}">Delete</a></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
     {% else %}
-        <h1>No workdays are listed at this time.</h1>
+        {% if user.is_superuser %}
+            <h1>Either no search was conducted or no workdays are available.</h1>
+        {% else %}
+            <h1>No workdays are listed at this time.</h1>
+        {% endif %}
     {% endif %}
     
     {% if user.is_superuser %}
         <h4><a href="{% url 'workdays:create' %}">Add Work Day</a></h4>
     {% endif %}
-
-    <h4><a href="{% url 'home' %}">Back</a></h4>
 {% endblock content%}

@@ -1,6 +1,10 @@
 {% extends "base/base.html" %}
 
 {% block content %}
+    <form action="{% url 'locations:list' %}" method="get">
+        <input name="search" type="text" placeholder="Search locations">
+        <button type="submit">Search</button>
+    </form>
     {% if locations %}
         <table>
             <tr>

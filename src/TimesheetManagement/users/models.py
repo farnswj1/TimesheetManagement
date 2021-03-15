@@ -58,6 +58,13 @@ US_STATES = (
 )
 
 # Create your models here.
+
+def full_name(self):
+    return f"{self.first_name} {self.last_name}"
+
+User.add_to_class("full_name", full_name)
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)
     ssn = models.CharField(

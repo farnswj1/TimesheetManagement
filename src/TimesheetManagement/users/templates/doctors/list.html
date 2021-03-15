@@ -1,5 +1,9 @@
 {% extends "users/list.html" %}
 
+{% block search_url %}
+    action="{% url 'users:doctor_list' %}"
+{% endblock search_url %}
+
 {% block options %}
     {% if user.is_superuser or user == user_ %}
         <td><a href="{% url 'users:doctor_detail' user_.id %}">View</a></td>

@@ -2,7 +2,7 @@
 
 {% block content %}
     <p><b>Work Day:</b> {{ workday.work_date }}</p>
-    <p><b>Employee:</b> {{ workday.employee }}</p>
+    <p><b>Employee:</b> {{ workday.user.full_name }}</p>
     <p><b>Location:</b> {{ workday.location }}</p>
     <p><b>Time In:</b> {{ workday.time_in }}</p>   
     <p><b>Time Out:</b> {{ workday.time_out }}</p>
@@ -14,4 +14,6 @@
         <p><a href="{% url 'workdays:update' workday.id %}">Update</a></p>
         <p><a href="{% url 'workdays:delete' workday.id %}">Delete</a></p>
     {% endif %}
+
+    <h4><a href="{% url 'workdays:list' %}">Back</a></h4>
 {% endblock content%}
