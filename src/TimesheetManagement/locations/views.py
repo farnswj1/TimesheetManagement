@@ -18,7 +18,7 @@ class LocationList(LoginRequiredMixin, UserPassesTestMixin, ListView):
     def get_queryset(self):
         query = self.request.GET.get("search")
         if query:
-            return Location.objects.filter(name__icontains=query.strip())
+            return Location.objects.filter(name__icontains=query.strip()).order_by("name", "sector")
         else:
             return super().get_queryset()
 
