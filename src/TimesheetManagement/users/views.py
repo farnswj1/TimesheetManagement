@@ -124,7 +124,10 @@ class DoctorUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.get(request, *args, **kwargs)
 
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user == self.get_object() and not self.get_object().is_locked()
+        return (
+            (self.request.user.is_superuser or self.request.user == self.get_object()) and 
+            not self.get_object().is_locked() and self.get_object().is_active
+        )
     
     def get_url(self, request, context):
         return render(request, self.template_name, context)
@@ -138,7 +141,10 @@ class DoctorDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     extra_context = {"title": "Delete Doctor"}
 
     def test_func(self):
-        return self.request.user.is_superuser and self.request.user != self.get_object() and not self.get_object().is_locked()
+        return (
+            self.request.user.is_superuser and self.request.user != self.get_object() and 
+            not self.get_object().is_locked() and self.get_object().is_active
+        )
 
     def delete(self, request, *args, **kwargs):
         user_ = self.get_object()

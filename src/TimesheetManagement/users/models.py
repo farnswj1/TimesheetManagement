@@ -3,6 +3,7 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.utils.timezone import now
+from datetime import timedelta
 
 US_STATES = (
     ('AL', 'Alabama'),
@@ -62,7 +63,11 @@ US_STATES = (
 def full_name(self):
     return f"{self.first_name} {self.last_name}"
 
+def is_locked(self):
+        return now() > self.date_joined + timedelta(days=45)
+
 User.add_to_class("full_name", full_name)
+User.add_to_class("is_locked", is_locked)
 
 
 class Profile(models.Model):

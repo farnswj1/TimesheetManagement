@@ -6,41 +6,12 @@
         {% csrf_token %}
         {% if user_form and profile_form %}
             <div class="form-group col-xs-4">
-<<<<<<< HEAD
                 {{ user_form|crispy }}
                 {{ profile_form|crispy }}
             </div>
-=======
-                {{ field.label_tag}}
-                {% render_field field class="form-control" %}
-                {% for error in field.errors%}
-                <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-            {% endfor %}
-
-            {% for field in profile_form %}
-            <div class="form-group col-xs-4">
-                {{ field.label_tag}}
-                {% render_field field class="form-control" %}
-                {% for error in field.errors%}
-                <span class="help-block">{{ error }}</span>
-                {% endfor %}
-            </div>
-            {% endfor %}
-
->>>>>>> bb51a175c9a8f06e4c97fdf4fc5802944663f018
         {% else %}
             <div class="form-group col-xs-4">
-<<<<<<< HEAD
                 {{ form|crispy }}
-=======
-                {{ field.label_tag}}
-                {% render_field field class="form-control" %}
-                {% for error in field.errors%}
-                <span class="help-block">{{ error }}</span>
-                {% endfor %}
->>>>>>> bb51a175c9a8f06e4c97fdf4fc5802944663f018
             </div>
         {% endif %}
         <button class="btn btn-primary mt-3" type="submit">Submit</button>
