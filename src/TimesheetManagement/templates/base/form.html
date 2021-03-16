@@ -2,18 +2,18 @@
 {% load widget_tweaks %}
 
 {% block content %}
-    <form enctype="multipart/form-data" method="POST">
+    <form enctype="multipart/form-data" method="POST" class="form-horizontal">
         {% csrf_token %}
         {% if user_form and profile_form %}
             {% for field in user_form %}
-            <div class="form-group">
+            <div class="form-group col-xs-4">
                 {{ field.label_tag}}
                 {% render_field field class="form-control" %}
             </div>
             {% endfor %}
 
             {% for field in profile_form %}
-            <div class="form-group">
+            <div class="form-group col-xs-4">
                 {{ field.label_tag}}
                 {% render_field field class="form-control" %}
             </div>
@@ -21,7 +21,7 @@
 
         {% else %}
             {% for field in form %}
-            <div class="form-group">
+            <div class="form-group col-xs-4">
                 {{ field.label_tag}}
                 {% render_field field class="form-control" %}
             </div>
@@ -31,3 +31,4 @@
     </form>
     {% block back_button %}{% endblock back_button %}
 {% endblock content %}
+

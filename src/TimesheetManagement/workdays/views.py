@@ -3,6 +3,7 @@ from django.views.generic import ListView, CreateView, DetailView, UpdateView, D
 from django.urls import reverse_lazy
 from .models import WorkDay
 from .forms import WorkDayForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 class WorkDayList(LoginRequiredMixin, ListView):
@@ -13,8 +14,29 @@ class WorkDayList(LoginRequiredMixin, ListView):
     extra_context = {"title": "List of Work Days"}
     
     def get_queryset(self):
-        return super().get_queryset() if self.request.user.is_superuser else WorkDay.objects.filter(user=self.request.user)
+        if self.request.user.is_superuser:
+            first_name = self.request.GET.get("first_name")
+            last_name = self.request.GET.get("last_name")
+            
+            if first_name and last_name:
+                user_ = User.objects.filter(
+                    first_name__icontains=first_name.strip(),
+                    last_name__icontains=last_name.strip()
+                )
+            elif first_name:
+                user_ = User.objects.filter(first_name__icontains=first_name.strip())
+            elif last_name:
+                user_ = User.objects.filter(last_name__icontains=last_name.strip())
+            else:
+                user_ = User.objects.none()
 
+            if user_:
+                return WorkDay.objects.filter(user=user_[0])
+            else:
+                return WorkDay.objects.none()
+        else:
+            return WorkDay.objects.filter(user=self.request.user)
+            
 
 class WorkDayCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = WorkDay
@@ -33,7 +55,7 @@ class WorkDayDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     extra_context = {"title": "Work Day Information"}
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_superuser or self.get_object().user == self.request.user
 
 
 class WorkDayUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

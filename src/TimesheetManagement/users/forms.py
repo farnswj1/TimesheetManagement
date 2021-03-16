@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import Profile
+from django.utils.timezone import now
 
 class UserCreateForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, help_text="Required")
@@ -24,7 +25,9 @@ class UserUpdateForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
-    date_of_birth = forms.DateField(widget=forms.SelectDateWidget())
+    date_of_birth = forms.DateField(
+        widget=forms.SelectDateWidget(years=tuple(range(1900, now().year)))
+    )
 
     class Meta:
         model = Profile

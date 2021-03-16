@@ -1,20 +1,31 @@
 {% extends "base/base.html" %}
 
 {% block content %}
+    {% if user.is_superuser %}
+    <form action="{% url 'workdays:list' %}" method="get">
+        <input name="first_name" type="text" placeholder="Search first name">
+        <input name="last_name" type="text" placeholder="Search last name">
+        <button type="submit" class="btn btn-secondary">Search</button>
+    </form>
+    {% endif %}
+
     {% if workdays %}
-        <table>
-            <tr>
-                <th>Work Date</th>
-                <th>Employee</th>
-                <th>Location</th>
-                <th>Time In</th>
-                <th>Time Out</th>
-                <th>Hours Code</th>
-                <th>FBP Payroll</th>
-                <th>AMCO Payroll</th>
-                <th colspan="3">Options</th>
-            </tr>
-            {% for workday in workdays %}    
+        <table class="table mt-4">
+            <thead></thead>
+                <tr>
+                    <th>Work Date</th>
+                    <th>Employee</th>
+                    <th>Location</th>
+                    <th>Time In</th>
+                    <th>Time Out</th>
+                    <th>Hours Code</th>
+                    <th>FBP Payroll</th>
+                    <th>AMCO Payroll</th>
+                    <th colspan="3">Actions</th>
+                </tr>
+            </thead>
+            {% for workday in workdays %}   
+            <tbody>
                 <tr>
                     <td>{{ workday.work_date }}</td>
                     <td>{{ workday.user }}</td>
@@ -25,19 +36,25 @@
                     <td>${{ workday.fbp_payroll }}</td>
                     <td>${{ workday.amco_payroll }}</td>
                     
-                    <td><a href="{% url 'workdays:detail' workday.id %}">View</a></td>
-                    <td><a href="{% url 'workdays:update' workday.id %}">Update</a></td>
-                    <td><a href="{% url 'workdays:delete' workday.id %}">Delete</a></td>
+                    <td><a href="{% url 'workdays:detail' workday.id %}" class="btn btn-success">View</a></td>
+                    
+                    {% if user.is_superuser %}
+                        <td><a href="{% url 'workdays:update' workday.id %}" class="btn btn-primary">Update</a></td>
+                        <td><a href="{% url 'workdays:delete' workday.id %}" class="btn btn-danger">Delete</a></td>
+                    {% endif %}
                 </tr>
+            </tbody>                 
             {% endfor %}
         </table>
     {% else %}
-        <h1>No workdays are listed at this time.</h1>
+        {% if user.is_superuser %}
+            <h5 class="m-5">Either no search was conducted or no workdays are available.</h5>
+        {% else %}
+            <h1>No workdays are listed at this time.</h1>
+        {% endif %}
     {% endif %}
     
     {% if user.is_superuser %}
-        <h4><a href="{% url 'workdays:create' %}">Add Work Day</a></h4>
+        <h4><a href="{% url 'workdays:create' %}" class="btn btn-primary">Add Work Day</a></h4>
     {% endif %}
-
-    <h4><a href="{% url 'home' %}">Back</a></h4>
 {% endblock content%}

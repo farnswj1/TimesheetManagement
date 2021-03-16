@@ -44,11 +44,36 @@ class DoctorList(LoginRequiredMixin, ListView):
     template_name = "doctors/list.html"
     context_object_name = "users"
     ordering = ["-is_active", "username"]
-    queryset = User.objects.filter(is_superuser=False)
     extra_context = {"title": "List of Doctors"}
+    get_superusers = False
 
     def test_func(self):
         return self.request.user.is_superuser
+    
+    def get_queryset(self):
+        first_name = self.request.GET.get("first_name")
+        last_name = self.request.GET.get("last_name")
+        
+        if first_name and last_name:
+            queryset = User.objects.filter(
+                first_name__icontains=first_name.strip(),
+                last_name__icontains=last_name.strip(),
+                is_superuser=self.get_superusers
+            )
+        elif first_name:
+            queryset = User.objects.filter(
+                first_name__icontains=first_name.strip(), 
+                is_superuser=self.get_superusers
+            )
+        elif last_name:
+            queryset = User.objects.filter(
+                last_name__icontains=last_name.strip(), 
+                is_superuser=self.get_superusers
+            )
+        else:
+            queryset = User.objects.filter(is_superuser=self.get_superusers)
+        
+        return queryset
 
 
 class DoctorDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
@@ -120,8 +145,8 @@ class DoctorDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class AdminList(DoctorList):
     template_name = "admins/list.html"
-    queryset = User.objects.filter(is_superuser=True)
     extra_context = {"title": "List of Administrators"}
+    get_superusers = True
 
 
 class AdminDetail(DoctorDetail):

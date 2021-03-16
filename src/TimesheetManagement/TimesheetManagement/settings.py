@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'workdays',
     'locations',
     'widget_tweaks',
+    'reports',
 ]
 
 MIDDLEWARE = [
