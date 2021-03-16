@@ -74,3 +74,8 @@ class WorkDay(models.Model):
     
     def get_absolute_url(self):
         return reverse("workdays:list")
+    
+    @property
+    def get_html_url(self):
+        url = reverse('workdays:detail', args=(self.id,))
+        return f'<a href="{url}">{self.time_in} - {self.time_out} {self.location}</a>'
