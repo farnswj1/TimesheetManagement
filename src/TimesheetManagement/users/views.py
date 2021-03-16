@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import UserCreateForm, UserUpdateForm, ProfileForm
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
-
+from .mailers import send_registration_email
 
 # Create your views here.
 class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
@@ -27,6 +27,12 @@ class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             profile_ = profile_form.save(commit=False)
             profile_.user = user_
             profile_form.save()
+
+            send_registration_email(
+                user_.email, 
+                user_.username, 
+                user_form.cleaned_data.get("password1")
+            )
 
             if user_.is_superuser:
                 return redirect("users:admin_detail", pk=user_.pk)
