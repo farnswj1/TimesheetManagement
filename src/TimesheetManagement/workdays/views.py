@@ -32,11 +32,11 @@ class WorkDayList(LoginRequiredMixin, ListView):
                 user_ = User.objects.none()
 
             if user_:
-                return WorkDay.objects.filter(user=user_[0])
+                return WorkDay.objects.filter(user=user_[0]).order_by("work_date", "time_in")
             else:
                 return WorkDay.objects.none()
         else:
-            return WorkDay.objects.filter(user=self.request.user)
+            return WorkDay.objects.filter(user=self.request.user).order_by("work_date", "time_in")
             
 
 class WorkDayCreate(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):

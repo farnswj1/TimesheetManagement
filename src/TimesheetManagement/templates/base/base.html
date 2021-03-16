@@ -46,17 +46,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'workdays:list' %}">Time Card Managment</a>
                 </li>
+                {% if user.is_superuser %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'reports:report' %}">Reports</a>
                 </li>
+                {% endif %}
                 </ul>
             {% endif %}
             </div>
-            <div>
-                {% if user.is_authenticated %}
-                    {% block sidebar %}{% endblock sidebar %}
-                {% endif %}
-            </div>
+
         </nav>
         </div>
         <div class="container">

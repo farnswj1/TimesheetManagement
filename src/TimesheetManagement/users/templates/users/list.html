@@ -9,9 +9,11 @@
                   <li class="nav-item active">
                     <a class="nav-link text-white" href="{% url 'users:admin_list' %}">Users</a>
                   </li>
+                  {% if user.is_superuser %}
                   <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'locations:list' %}">Location</a>
                   </li>
+                  {% endif %}
                   <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'users:doctor_list' %}">Doctors</a>
                   </li>

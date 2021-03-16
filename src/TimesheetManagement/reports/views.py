@@ -71,9 +71,9 @@ class Report(LoginRequiredMixin, UserPassesTestMixin, ListView):
             return WorkDay.objects.filter(
                 work_date__gte=datetime.strptime(start_date, "%m-%d-%Y"),
                 work_date__lte=datetime.strptime(end_date, "%m-%d-%Y")
-            )
+            ).order_by("work_date", "time_in")
         else:
-            return WorkDay.objects.filter(work_date=now())
+            return WorkDay.objects.filter(work_date=now()).order_by("work_date", "time_in")
     
     def test_func(self):
         return self.request.user.is_superuser
