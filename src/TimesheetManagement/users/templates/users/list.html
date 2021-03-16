@@ -19,10 +19,10 @@
               </div> 
         </div>
         <div class="col-sm-9">
-        <form {% block action_url %}{% endblock action_url %} method="get">
+        <form {% block action_url %}{% endblock action_url %} method="get" >
             <input name="first_name" type="text" placeholder="Search first name">
             <input name="last_name" type="text" placeholder="Search last name">
-            <button type="submit">Search</button>
+            <button type="submit" class="btn btn-secondary">Search</button>
         </form>    
         {% if users %}
         <table class="table mt-4">
