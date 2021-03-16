@@ -8,4 +8,4 @@ class WorkDayForm(forms.ModelForm):
 
     class Meta:
         model = WorkDay
-        fields = "__all__"
+        exclude = ["date_created"]

@@ -1,7 +1,7 @@
 import csv
 from django.http import HttpResponse
 from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from workdays.models import WorkDay
 from django.utils.timezone import now
 from datetime import datetime, timedelta
@@ -45,7 +45,7 @@ def export(request, query):
     return response
 
 
-class Report(LoginRequiredMixin, ListView):
+class Report(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = WorkDay
     template_name = "reports/report.html"
     context_object_name = "workdays"
@@ -74,3 +74,6 @@ class Report(LoginRequiredMixin, ListView):
             )
         else:
             return WorkDay.objects.filter(work_date=now())
+    
+    def test_func(self):
+        return self.request.user.is_superuser

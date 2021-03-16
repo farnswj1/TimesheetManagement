@@ -41,7 +41,7 @@ class LocationUpdate(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
     success_message = "Location was successfully updated!"
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_superuser and not self.get_object().is_locked()
 
 
 class LocationDelete(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
@@ -52,4 +52,4 @@ class LocationDelete(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixi
     success_message = "Location was successfully deleted!"
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_superuser and not self.get_object().is_locked()

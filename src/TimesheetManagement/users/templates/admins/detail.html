@@ -1,7 +1,7 @@
 {% extends "users/detail.html" %}
 
 {% block options %}
-    {% if user.is_superuser and user != user_ and user_.is_active %}
+    {% if user.is_superuser and user != user_ and user_.is_active and not user_.is_locked %}
         <p><a href="{% url 'users:admin_update' user_.id %}">Update</a></p>
         <p><a href="{% url 'users:admin_delete' user_.id %}">Delete</a></p>
     {% endif %}

@@ -68,7 +68,7 @@ class WorkDayUpdate(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin
     success_message = "Workday was successfully updated!"
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_superuser and not self.get_object().is_locked()
 
 
 class WorkDayDelete(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
@@ -79,4 +79,4 @@ class WorkDayDelete(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin
     success_message = "Workday was successfully deleted!"
 
     def test_func(self):
-        return self.request.user.is_superuser
+        return self.request.user.is_superuser and not self.get_object().is_locked()

@@ -14,6 +14,10 @@
     <p><b>City:</b> {{ user_.profile.city }}</p>
     <p><b>State:</b> {{ user_.profile.state }}</p>
     <p><b>ZIP Code:</b> {{ user_.profile.zip_code }}</p>
+    <p>
+        <b>Date Joined:</b> {{ user_.date_joined }}
+        {% if user_.is_locked %} <b>(LOCKED)</b> {% endif %}
+    </p>
     
     {% block options %}{% endblock options %}
 

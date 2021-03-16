@@ -16,7 +16,7 @@ class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def get(self, request, *args, **kwargs):
         user_form = UserCreateForm()
         profile_form = ProfileForm()
-        context = {"user_form": UserCreateForm, "profile_form": ProfileForm, "title": "New User"}
+        context = {"user_form": user_form, "profile_form": profile_form, "title": "New User"}
         return render(request, "users/create.html", context)
 
     def post(self, request, *args, **kwargs):
@@ -54,9 +54,6 @@ class DoctorList(LoginRequiredMixin, ListView):
     ordering = ["-is_active", "username"]
     extra_context = {"title": "List of Doctors"}
     get_superusers = False
-
-    def test_func(self):
-        return self.request.user.is_superuser
     
     def get_queryset(self):
         first_name = self.request.GET.get("first_name")
@@ -126,7 +123,7 @@ class DoctorUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             self.get(request, *args, **kwargs)
 
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user == self.get_object()
+        return self.request.user.is_superuser or self.request.user == self.get_object() and not self.get_object().is_locked()
     
     def get_url(self, request, context):
         return render(request, self.template_name, context)
@@ -140,7 +137,7 @@ class DoctorDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     extra_context = {"title": "Delete Doctor"}
 
     def test_func(self):
-        return self.request.user.is_superuser and self.request.user != self.get_object()
+        return self.request.user.is_superuser and self.request.user != self.get_object() and not self.get_object().is_locked()
 
     def delete(self, request, *args, **kwargs):
         user_ = self.get_object()

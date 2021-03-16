@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
+from django.utils.timezone import now
 
 US_STATES = (
     ('AL', 'Alabama'),
@@ -58,7 +59,6 @@ US_STATES = (
 )
 
 # Create your models here.
-
 def full_name(self):
     return f"{self.first_name} {self.last_name}"
 

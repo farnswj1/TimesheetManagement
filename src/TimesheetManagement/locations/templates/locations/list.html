@@ -29,6 +29,7 @@
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Sector</th>
+                    <th scope="col">Date Created</th>
                     <th colspan="2">Actions</th>
                 </tr>
                 </thead>
@@ -43,9 +44,18 @@
                                 West
                             {% endif %}
                         </td>
-    
-                        <td><a href="{% url 'locations:update' location.id %}" class="btn btn-primary">Update</a></td>
-                        <td><a href="{% url 'locations:delete' location.id %}" class="btn btn-danger">Delete</a></td>
+                        <td>
+                            {{ location.date_created }}
+                            {% if location.is_locked %} <b>(LOCKED)</b> {% endif %}
+                        </td>
+                        
+                        {% if user.is_superuser and not location.is_locked %}
+                            <td><a href="{% url 'locations:update' location.id %}" class="btn btn-primary">Update</a></td>
+                            <td><a href="{% url 'locations:delete' location.id %}" class="btn btn-danger">Delete</a></td>
+                        {% else %}
+                            <td></td>
+                            <td></td>    
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>

@@ -9,8 +9,12 @@
     <p><b>Hours Code:</b> {{ workday.hours_code }}</p>
     <p><b>FBP Payroll:</b> ${{ workday.fbp_payroll }}</p>
     <p><b>AMCO Payroll:</b> ${{ workday.amco_payroll }}</p>
+    <p>
+        <b>Date Created:</b> {{ workday.date_created }}
+        {% if workday.is_locked %} <b>(LOCKED)</b> {% endif %}
+    </p>
 
-    {% if user.is_superuser %}
+    {% if user.is_superuser and not workday.is_locked %}
         <p><a href="{% url 'workdays:update' workday.id %}">Update</a></p>
         <p><a href="{% url 'workdays:delete' workday.id %}">Delete</a></p>
     {% endif %}

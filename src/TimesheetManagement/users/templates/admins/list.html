@@ -8,10 +8,15 @@
 {% block options %}
     {% if user.is_superuser or user == user_ %}
         <td><a href="{% url 'users:admin_detail' user_.id %}" class="btn btn-success">View</a></td>
+    {% else %}
+        <td></td>
     {% endif %}
 
-    {% if user.is_superuser and user != user_ and user_.is_active %}
+    {% if user.is_superuser and user != user_ and user_.is_active and not user_.is_locked %}
         <td><a href="{% url 'users:admin_update' user_.id %}" class="btn btn-primary">Update</a></td>
         <td><a href="{% url 'users:admin_delete' user_.id %}" class="btn btn-danger">Delete</a></td>
+    {% else %}
+        <td></td>
+        <td></td>
     {% endif %}
 {% endblock options %}

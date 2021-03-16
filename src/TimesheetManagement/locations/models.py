@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import RegexValidator
 from django.urls import reverse
+from django.utils.timezone import now
+from datetime import timedelta
 
 SECTORS = (("E", "East"), ("W", "West"))
 
@@ -28,9 +30,13 @@ class Location(models.Model):
             )
         ]
     )
+    date_created = models.DateTimeField(null=False, default=now)
 
     def __str__(self):
         return f"{self.name} ({self.sector})"
+
+    def is_locked(self):
+        return now() > self.date_created + timedelta(days=45)
 
     def get_absolute_url(self):
         return reverse("locations:list")

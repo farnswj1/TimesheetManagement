@@ -4,7 +4,7 @@ from django.utils.timezone import now
 from django.contrib.auth.models import User
 from django.urls import reverse
 from locations.models import Location
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timedelta
 
 
 HOUR_CODES = (("FBP", "FBP"), ("AMCO", "AMCO"))
@@ -41,7 +41,7 @@ class WorkDay(models.Model):
                 message="Payroll must be under $10 million."
             )
         ]
-    ) 
+    )
     amco_payroll = models.DecimalField(
         max_digits=9, 
         decimal_places=2, 
@@ -58,12 +58,16 @@ class WorkDay(models.Model):
             )
         ]
     )
+    date_created = models.DateTimeField(null=False, default=now)
 
     def hours_worked(self):
         date_ = date(1, 1, 1)
         datetime1 = datetime.combine(date_, self.time_in)
         datetime2 = datetime.combine(date_, self.time_out)
         return datetime2 - datetime1
+    
+    def is_locked(self):
+        return now() > self.date_created + timedelta(days=45)
     
     def get_absolute_url(self):
         return reverse("workdays:list")
