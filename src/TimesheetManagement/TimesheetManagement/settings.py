@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'users',
     'workdays',
     'locations',
-    'widget_tweaks',
+    #'widget_tweaks',
+    'crispy_forms',
     'reports',
 ]
 
@@ -68,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.get_today_date'
             ],
         },
     },
@@ -140,3 +142,5 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_USERNAME")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

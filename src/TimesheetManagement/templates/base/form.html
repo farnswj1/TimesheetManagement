@@ -1,31 +1,18 @@
 {% extends "base/base.html" %}
-{% load widget_tweaks %}
+{% load crispy_forms_tags %}
 
 {% block content %}
     <form enctype="multipart/form-data" method="POST" class="form-horizontal">
         {% csrf_token %}
         {% if user_form and profile_form %}
-            {% for field in user_form %}
             <div class="form-group col-xs-4">
-                {{ field.label_tag}}
-                {% render_field field class="form-control" %}
+                {{ user_form|crispy }}
+                {{ profile_form|crispy }}
             </div>
-            {% endfor %}
-
-            {% for field in profile_form %}
-            <div class="form-group col-xs-4">
-                {{ field.label_tag}}
-                {% render_field field class="form-control" %}
-            </div>
-            {% endfor %}
-
         {% else %}
-            {% for field in form %}
             <div class="form-group col-xs-4">
-                {{ field.label_tag}}
-                {% render_field field class="form-control" %}
+                {{ form|crispy }}
             </div>
-            {% endfor %}
         {% endif %}
         <button class="btn btn-primary mt-3" type="submit">Submit</button>
     </form>
