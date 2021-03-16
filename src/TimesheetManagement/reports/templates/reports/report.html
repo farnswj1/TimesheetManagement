@@ -38,7 +38,7 @@
             {% endfor %}
         </table>
 
-        <h4><a href="{% url 'reports:export' query %}" class="btn btn-success">Export</a></h4>
+        <h4><a href="{% url 'reports:export' %}" class="btn btn-success">Export</a></h4>
     {% else %}
         <h1>Either no search was conducted or no workdays met the criteria.</h1>
     {% endif %}

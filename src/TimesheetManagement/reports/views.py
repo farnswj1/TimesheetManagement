@@ -6,10 +6,11 @@ from workdays.models import WorkDay
 from django.utils.timezone import now
 from datetime import datetime, timedelta
 from .forms import DateRangeForm
+from django.core.cache import cache
 
 
 # Create your views here.
-def export(request, query):
+'''def export(request, query):
     query = tuple(map(int, query.split()))
     
     workdays = WorkDay.objects.filter(
@@ -43,7 +44,38 @@ def export(request, query):
         ])
 
     return response
+'''
 
+def export(request):
+    workdays = cache.get("export")
+
+    
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="report.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(
+        ["work_date", "file_number", "employee_name", "time_in", 
+        "time_out", "hours_worked", "location", "sector", 
+        "hours_code", "fbp_payroll", "amco_payroll"
+    ])
+    
+    for workday in workdays:
+        writer.writerow([
+            workday.work_date,
+            workday.user.id,
+            workday.user.full_name(),
+            workday.time_in,
+            workday.time_out,
+            workday.hours_worked(),
+            workday.location.name,
+            workday.location.sector,
+            workday.hours_code,
+            workday.fbp_payroll,
+            workday.amco_payroll
+        ])
+
+    return response
 
 class Report(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = WorkDay
@@ -56,9 +88,6 @@ class Report(LoginRequiredMixin, UserPassesTestMixin, ListView):
         context["search_form"] = DateRangeForm(
             initial={"start_date": now(), "end_date": now() + timedelta(days=14)}
         )
-        query = self.request.GET
-        if query:
-            context["query"] = ' '.join(query.values())
         return context
     
     def get_queryset(self):
@@ -68,12 +97,16 @@ class Report(LoginRequiredMixin, UserPassesTestMixin, ListView):
             start_date = f"{query.get('start_date_month')}-{query.get('start_date_day')}-{query.get('start_date_year')}"
             end_date = f"{query.get('end_date_month')}-{query.get('end_date_day')}-{query.get('end_date_year')}"
 
-            return WorkDay.objects.filter(
+            queryset = WorkDay.objects.filter(
                 work_date__gte=datetime.strptime(start_date, "%m-%d-%Y"),
                 work_date__lte=datetime.strptime(end_date, "%m-%d-%Y")
             ).order_by("work_date", "time_in")
         else:
-            return WorkDay.objects.filter(work_date=now()).order_by("work_date", "time_in")
+            queryset = WorkDay.objects.filter(work_date=now()).order_by("work_date", "time_in")
+
+        cache.set("export", queryset)
+        return queryset
+    
     
     def test_func(self):
         return self.request.user.is_superuser

@@ -5,5 +5,5 @@ app_name = "reports"
 
 urlpatterns = [
     path("", views.Report.as_view(), name="report"),
-    path("export/<str:query>/", views.export, name="export"),
+    path("export/", views.export, name="export"),
 ]

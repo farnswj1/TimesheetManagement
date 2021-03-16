@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from .models import WorkDay
 from .forms import WorkDayForm
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from .utils import Calendar
 from django.utils.safestring import mark_safe
 from datetime import datetime, date, timedelta
@@ -52,6 +53,15 @@ class WorkDayList(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         if self.request.user.is_superuser:
+            cached_queryset = cache.get("workdays")
+            if cached_queryset:
+                cached_first_name, cached_last_name = cache.get("full_name")
+                if (self.request.GET.get("first_name") == cached_first_name and self.request.GET.get("last_name") == cached_last_name) or (not self.request.GET.get("first_name") and not self.request.GET.get("last_name")):
+                    return cached_queryset
+                else:
+                    cache.delete("workdays")
+                    cache.delete("full_name")
+
             first_name = self.request.GET.get("first_name")
             last_name = self.request.GET.get("last_name")
             
@@ -68,7 +78,10 @@ class WorkDayList(LoginRequiredMixin, ListView):
                 user_ = User.objects.none()
 
             if user_:
-                return WorkDay.objects.filter(user=user_[0]).order_by("work_date", "time_in")
+                queryset = WorkDay.objects.filter(user=user_[0]).order_by("work_date", "time_in")
+                cache.set("workdays", queryset)
+                cache.set("full_name", (first_name, last_name))
+                return queryset
             else:
                 return WorkDay.objects.none()
         else:
