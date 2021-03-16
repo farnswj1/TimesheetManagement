@@ -64,19 +64,20 @@ class DoctorList(LoginRequiredMixin, ListView):
                 first_name__icontains=first_name.strip(),
                 last_name__icontains=last_name.strip(),
                 is_superuser=self.get_superusers
-            )
+            ).order_by("-is_active", "last_name", "first_name")
         elif first_name:
             queryset = User.objects.filter(
                 first_name__icontains=first_name.strip(), 
                 is_superuser=self.get_superusers
-            )
+            ).order_by("-is_active", "last_name", "first_name")
         elif last_name:
             queryset = User.objects.filter(
                 last_name__icontains=last_name.strip(), 
                 is_superuser=self.get_superusers
-            )
+            ).order_by("-is_active", "last_name", "first_name")
         else:
-            queryset = User.objects.filter(is_superuser=self.get_superusers)
+            queryset = User.objects.filter(is_superuser=self.get_superusers)\
+                .order_by("-is_active", "last_name", "first_name")
         
         return queryset
 
