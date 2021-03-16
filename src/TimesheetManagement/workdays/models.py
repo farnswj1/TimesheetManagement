@@ -60,6 +60,9 @@ class WorkDay(models.Model):
     )
     date_created = models.DateTimeField(null=False, default=now)
 
+    def __str__(self):
+        return f"{self.user.full_name()}: {self.work_date} ({self.time_in}-{self.time_out})"
+
     def hours_worked(self):
         date_ = date(1, 1, 1)
         datetime1 = datetime.combine(date_, self.time_in)
