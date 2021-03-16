@@ -1,52 +1,63 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-    <form {% block action_url %}{% endblock action_url %} method="get">
-        <input name="first_name" type="text" placeholder="Search first name">
-        <input name="last_name" type="text" placeholder="Search last name">
-        <button type="submit">Search</button>
-    </form>
-    {% if users %}
-        <table>
-            <tr>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Active</th>
-                <th>Description</th>
-                <th>Phone Number</th>
-                <th>Date of Birth</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
-                <th>ZIP Code</th>
-                <th colspan="3">Options</th>
-            </tr>
-            {% for user_ in users %}    
-                <tr>
-                    <td>{{ user_.username }}</td>
-                    <td>{{ user_.first_name }}</td>
-                    <td>{{ user_.last_name }}</td>
-                    <td>{{ user_.email }}</td>
-                    <td>{{ user_.is_active|yesno:"Yes,No" }}</td>
-                    <td>{{ user_.profile.description }}</td>
-                    <td>{{ user_.profile.phone_number }}</td>
-                    <td>{{ user_.profile.date_of_birth }}</td>
-                    <td>{{ user_.profile.address }}</td>
-                    <td>{{ user_.profile.city }}</td>
-                    <td>{{ user_.profile.state }}</td>
-                    <td>{{ user_.profile.zip_code }}</td>
-                    
-                    {% block options %}{% endblock options %}
+<div class="container">
+    <div class="row justify-content-between mt-2">
+        <div class="col-sm-2 bg-primary text-white rounded pt-3">
+            <div>
+                <ul class="navbar-nav text-white">
+                  <li class="nav-item active">
+                    <a class="nav-link text-white" href="{% url 'users:admin_list' %}">Users</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'locations:list' %}">Location</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'users:doctor_list' %}">Doctors</a>
+                  </li>
+                </ul>
+              </div> 
+        </div>
+        <div class="col-sm-9">
+        <form {% block action_url %}{% endblock action_url %} method="get" >
+            <input name="first_name" type="text" placeholder="Search first name">
+            <input name="last_name" type="text" placeholder="Search last name">
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>    
+        {% if users %}
+        <table class="table mt-4">
+            <thead>
+                <tr> 
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Active</th>
+                  <th scope="col">Description</th>
+                  <th colspan='3'>Actions</th>
+                  
                 </tr>
-            {% endfor %}
+              </thead>
+              {% for user_ in users %}
+              <tbody>
+                <tr>
+                  <td>{{ user_.first_name }}</td>
+                  <td>{{ user_.last_name }}</td>
+                  <td>{{ user_.email }}</td>
+                  <td>{{ user_.is_active|yesno:"Yes,No" }}</td>
+                  <td>{{ user_.profile.description }}</td>
+                  {% block options %}{% endblock options %}
+                </tr>
+                </tbody>
+              {% endfor %}
         </table>
     {% else %}
         <h1>No users met the search criteria.</h1>
     {% endif %}
 
     {% if user.is_superuser %}
-        <h4><a href="{% url 'users:create' %}">Add User</a></h4>
+        <h4><a href="{% url 'users:create' %}" class="btn btn-primary">Add User</a></h4>
     {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock content%}

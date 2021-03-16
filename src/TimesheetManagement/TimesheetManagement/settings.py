@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'workdays',
     'locations',
+    'widget_tweaks',
     'reports',
 ]
 

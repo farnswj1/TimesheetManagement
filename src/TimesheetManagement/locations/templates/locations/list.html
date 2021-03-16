@@ -1,38 +1,61 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-    <form action="{% url 'locations:list' %}" method="get">
-        <input name="search" type="text" placeholder="Search locations">
-        <button type="submit">Search</button>
-    </form>
-    {% if locations %}
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Sector</th>
-                <th colspan="2">Options</th>
-            </tr>
-            {% for location in locations %}    
+<div class="container">
+    <div class="row justify-content-between mt-2">
+        <div class="col-sm-2 bg-primary text-white rounded pt-3">
+            <div>
+                <ul class="navbar-nav text-white">
+                  <li class="nav-item active">
+                    <a class="nav-link text-white" href="{% url 'users:admin_list' %}">Users</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'locations:list' %}">Location</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'users:doctor_list' %}">Doctors</a>
+                  </li>
+                </ul>
+              </div> 
+        </div>
+        <div class="col-sm-9">
+            <form action="{% url 'locations:list' %}" method="get">
+                <input name="search" type="text" placeholder="Search locations">
+                <button type="submit" class="btn btn-secondary">Search</button>
+            </form>
+            {% if locations %}
+            <table class="table mt-4">
+                <thead>
                 <tr>
-                    <td>{{ location.name }}</td>
-                    <td>
-                        {% if location.sector == "E" %}
-                            East
-                        {% elif location.sector == "W" %}
-                            West
-                        {% endif %}
-                    </td>
-
-                    <td><a href="{% url 'locations:update' location.id %}">Update</a></td>
-                    <td><a href="{% url 'locations:delete' location.id %}">Delete</a></td>
+                    <th scope="col">Name</th>
+                    <th scope="col">Sector</th>
+                    <th colspan="2">Actions</th>
                 </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <h1>No locations are listed at this time.</h1>
-    {% endif %}
-
-    <h4><a href="{% url 'locations:create' %}">Add Location</a></h4>
-
-    <h4><a href="{% url 'home' %}">Back</a></h4>
+                </thead>
+                {% for location in locations %}    
+                <tbody>
+                    <tr>
+                        <td>{{ location.name }}</td>
+                        <td>
+                            {% if location.sector == "E" %}
+                                East
+                            {% elif location.sector == "W" %}
+                                West
+                            {% endif %}
+                        </td>
+    
+                        <td><a href="{% url 'locations:update' location.id %}" class="btn btn-primary">Update</a></td>
+                        <td><a href="{% url 'locations:delete' location.id %}" class="btn btn-danger">Delete</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <h1>No locations are listed at this time.</h1>
+            {% endif %}
+        
+            <h4><a href="{% url 'locations:create' %}" class="btn btn-primary">Add Location</a></h4>
+        </div>
+</div>
+    
 {% endblock content %}
