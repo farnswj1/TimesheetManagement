@@ -4,7 +4,7 @@ from django.utils.timezone import now
 from django.contrib.auth.models import User
 from django.urls import reverse
 from locations.models import Location
-from datetime import time
+from datetime import date, time, datetime
 
 
 HOUR_CODES = (("FBP", "FBP"), ("AMCO", "AMCO"))
@@ -60,7 +60,10 @@ class WorkDay(models.Model):
     )
 
     def hours_worked(self):
-        return self.time_out - self.time_in
+        date_ = date(1, 1, 1)
+        datetime1 = datetime.combine(date_, self.time_in)
+        datetime2 = datetime.combine(date_, self.time_out)
+        return datetime2 - datetime1
     
     def get_absolute_url(self):
         return reverse("workdays:list")

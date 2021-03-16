@@ -2,7 +2,40 @@
 
 {% block content %}
     <form action="{% url 'reports:report' %}" method="get">
-        <input name="search" type="text" placeholder="Search date">
+        {{ search_form.as_p }}
         <button type="submit">Search</button>
     </form>
+
+    {% if workdays %}
+        <table>
+            <tr>
+                <th>Work Date</th>
+                <th>Employee</th>
+                <th>Location</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Hours Worked</th>
+                <th>Hours Code</th>
+                <th>FBP Payroll</th>
+                <th>AMCO Payroll</th>
+            </tr>
+            {% for workday in workdays %}    
+                <tr>
+                    <td>{{ workday.work_date }}</td>
+                    <td>{{ workday.user }}</td>
+                    <td>{{ workday.location}}</td>
+                    <td>{{ workday.time_in }}</td>
+                    <td>{{ workday.time_out }}</td>
+                    <td>{{ workday.hours_worked }}</td>
+                    <td>{{ workday.hours_code }}</td>
+                    <td>${{ workday.fbp_payroll }}</td>
+                    <td>${{ workday.amco_payroll }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h4><a href="{% url 'reports:export' query %}">Export</a></h4>
+    {% else %}
+        <h1>Either no search was conducted or no workdays met the criteria.</h1>
+    {% endif %}
 {% endblock content %}
