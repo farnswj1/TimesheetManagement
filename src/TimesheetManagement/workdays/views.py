@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, UserPassesTestMixin
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from .models import WorkDay
 from .forms import WorkDayForm
@@ -38,11 +39,12 @@ class WorkDayList(LoginRequiredMixin, ListView):
             return WorkDay.objects.filter(user=self.request.user)
             
 
-class WorkDayCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class WorkDayCreate(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = WorkDay
     template_name = "workdays/new_or_update.html"
     extra_context = {"title": "New Work Day"}
     form_class = WorkDayForm
+    success_message = "Workday was successfully created!"
 
     def test_func(self):
         return self.request.user.is_superuser
@@ -58,21 +60,23 @@ class WorkDayDetail(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         return self.request.user.is_superuser or self.get_object().user == self.request.user
 
 
-class WorkDayUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class WorkDayUpdate(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = WorkDay
     template_name = "workdays/new_or_update.html"
     extra_context = {"title": "Update Work Day"}
     form_class = WorkDayForm
+    success_message = "Workday was successfully updated!"
 
     def test_func(self):
         return self.request.user.is_superuser
 
 
-class WorkDayDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class WorkDayDelete(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView):
     model = WorkDay
     template_name = "workdays/delete.html"
     extra_context = {"title": "Delete Work Day"}
     success_url = reverse_lazy("workdays:list")
+    success_message = "Workday was successfully deleted!"
 
     def test_func(self):
         return self.request.user.is_superuser

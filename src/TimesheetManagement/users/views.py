@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import UserCreateForm, UserUpdateForm, ProfileForm
 from django.urls import reverse_lazy
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .mailers import send_registration_email
 
@@ -34,6 +35,7 @@ class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                 user_form.cleaned_data.get("password1")
             )
 
+            messages.success(self.request, "User has been created!")
             if user_.is_superuser:
                 return redirect("users:admin_detail", pk=user_.pk)
             else:
@@ -114,7 +116,8 @@ class DoctorUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if user_form.is_valid() and profile_form.is_valid():
             user_ = user_form.save()
             profile_form.save()
-
+            messages.info(self.request, "User has been updated!")
+            
             if user_.is_superuser:
                 return redirect("users:admin_detail", pk=user_.pk)
             else:
@@ -143,6 +146,8 @@ class DoctorDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         user_ = self.get_object()
         user_.is_active = False
         user_.save()
+        messages.warning(self.request, "User has been deleted!")
+
         if user_.is_superuser:
             return redirect("users:admin_list")
         else:

@@ -11,7 +11,7 @@ from .forms import DateRangeForm
 # Create your views here.
 def export(request, query):
     query = tuple(map(int, query.split()))
-    print(query)
+    
     workdays = WorkDay.objects.filter(
         work_date__gte=datetime(query[2], query[0], query[1]),
         work_date__lte=datetime(query[5], query[3], query[4])
@@ -49,6 +49,7 @@ class Report(LoginRequiredMixin, ListView):
     model = WorkDay
     template_name = "reports/report.html"
     context_object_name = "workdays"
+    extra_context = {"title": "Reports"}
 
     def get_context_data(self, object_list=None, *args, **kwargs):
         context = super().get_context_data(object_list=object_list, *args, **kwargs)
