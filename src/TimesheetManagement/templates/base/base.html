@@ -24,7 +24,7 @@
                         <a href="{% url 'users:logout' %}">Logout</a>
                         <a href="{% url 'users:admin_list' %}">Administration</a>
                         <a href="{% url 'workdays:list' %}">Time Card Management</a>
-                        <a href="">Reports</a>
+                        <a href="{% url 'reports:report' %}">Reports</a>
                     </h4>
                     {% endif %}
                 </div>
