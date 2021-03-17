@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '1vy!_a$1zs@c72sf53$v3_0-xrosvl2dd8dxql&egl(4ktpp1v'
+SECRET_KEY = os.environ.get("TIMESHEET_MANAGEMENT_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -88,11 +88,11 @@ WSGI_APPLICATION = 'TimesheetManagement.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'TimesheetManagement',
-        'HOST': 'timesheetmanagement.cdzw06fxmtzb.us-east-2.rds.amazonaws.com',
-        'USER': 'admin',
-        'PASSWORD': 'testing12345',
-        'PORT': '3306',
+        'NAME': os.environ.get("RDS_NAME"),
+        'HOST': os.environ.get("RDS_HOST"),
+        'USER': os.environ.get("RDS_USERNAME"),
+        'PASSWORD': os.environ.get("RDS_PASSWORD"),
+        'PORT': os.environ.get("RDS_PORT"),
     }
 }
 
