@@ -26,7 +26,11 @@ SECRET_KEY = '1vy!_a$1zs@c72sf53$v3_0-xrosvl2dd8dxql&egl(4ktpp1v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'ec2-18-221-235-23.us-east-2.compute.amazonaws.com', 
+    '18.221.235.23', 
+    'timesheetmanagement.ml'
+]
 
 
 # Application definition
@@ -83,8 +87,12 @@ WSGI_APPLICATION = 'TimesheetManagement.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'TimesheetManagement',
+        'HOST': 'timesheetmanagement.cdzw06fxmtzb.us-east-2.rds.amazonaws.com',
+        'USER': 'admin',
+        'PASSWORD': 'testing12345',
+        'PORT': '3306',
     }
 }
 
@@ -113,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 

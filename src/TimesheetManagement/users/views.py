@@ -28,12 +28,15 @@ class UserCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             profile_ = profile_form.save(commit=False)
             profile_.user = user_
             profile_form.save()
-
-            send_registration_email(
-                user_.email, 
-                user_.username, 
-                user_form.cleaned_data.get("password1")
-            )
+            
+            try:
+                send_registration_email(
+                    user_.email, 
+                    user_.username, 
+                    user_form.cleaned_data.get("password1")
+                )
+            except:
+                pass
 
             messages.success(self.request, "User has been created!")
             if user_.is_superuser:
